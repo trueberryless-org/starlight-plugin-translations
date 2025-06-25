@@ -1,43 +1,53 @@
 ---
 import LunariaLayout from "../../layouts/LunariaLayout.astro";
-import { getLocaleByLang, pluginToLanguageTransformer, processPlugins, type DataPerPlugin } from "../../utils";
+import {
+  getLocaleByLang,
+  pluginToLanguageTransformer,
+  processPlugins,
+  type DataPerPlugin,
+} from "../../utils";
 
 export async function getStaticPaths() {
   const pluginsData = await processPlugins();
   const languageData = await pluginToLanguageTransformer(pluginsData);
-  return languageData.map(language => ({
+  return languageData.map((language) => ({
     params: { language: language.lang },
-    props: { pluginsData }
+    props: { pluginsData },
   }));
 }
 
 const { language } = Astro.params;
 const { pluginsData } = Astro.props;
 const filteredPluginsData: DataPerPlugin[] = pluginsData
-  .map(plugin => {
+  .map((plugin) => {
     const filteredKeys = plugin.keys
-      .filter(key => key.locales[language])
-      .map(key => ({
+      .filter((key) => key.locales[language])
+      .map((key) => ({
         key: key.key,
         locales: {
-          [language]: key.locales[language]!
-        }
+          [language]: key.locales[language]!,
+        },
       }));
 
     if (filteredKeys.length === 0) return null;
 
     return {
       ...plugin,
-      keys: filteredKeys
+      keys: filteredKeys,
     };
   })
   .filter((plugin): plugin is DataPerPlugin => plugin !== null);
 
-const title="Starlight Plugins " + getLocaleByLang(language).label +  " Translation Tracker";
+const title =
+  "Starlight Plugins " +
+  getLocaleByLang(language).label +
+  " Translation Tracker";
 ---
 
 <LunariaLayout {title} pluginsData={filteredPluginsData}>
   <p slot="description">
-    You are viewing the translation tracker for the for the language: {getLocaleByLang(language).label}.
+    You are viewing the translation tracker for the for the language: {
+      getLocaleByLang(language).label
+    }.
   </p>
 </LunariaLayout>

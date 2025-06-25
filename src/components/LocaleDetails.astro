@@ -1,90 +1,91 @@
 ---
-import type { LocaleKeys, Progress } from '../schemas';
-import Link from './Link.astro';
-import ProgressBar from './ProgressBar.astro';
+import type { LocaleKeys, Progress } from "../schemas";
+import Link from "./Link.astro";
+import ProgressBar from "./ProgressBar.astro";
 
 interface Props {
-  localeKeys: LocaleKeys
+  localeKeys: LocaleKeys;
 }
 
-const {
-  localeKeys
-} = Astro.props as Props;
+const { localeKeys } = Astro.props as Props;
 
-const { keys, locale} = localeKeys;
+const { keys, locale } = localeKeys;
 
 const doneCount = keys.filter((key) => key.status == "done").length;
 const missingCount = keys.filter((key) => key.status == "missing").length;
-const progress: Progress =  {
+const progress: Progress = {
   total: doneCount + missingCount,
   missing: missingCount,
 };
 ---
 
 <details class="progress-details">
-      <summary>
-        <strong
-          >{locale.label} ({locale.lang})</strong
-        >
-        <br />
-        <span class="progress-summary"
-          >{doneCount} done, {missingCount} missing</span
-        >
-        <br />
-        <ProgressBar {progress}/>
-      </summary>
-      {progress.missing > 0 &&
+  <summary>
+    <strong>{locale.label} ({locale.lang})</strong>
+    <br />
+    <span class="progress-summary"
+      >{doneCount} done, {missingCount} missing</span
+    >
+    <br />
+    <ProgressBar {progress} />
+  </summary>
+  {
+    progress.missing > 0 && (
       <>
         <h3>Missing</h3>
-            <ul>
-              {keys.filter((key) => key.status == "missing").map(
-                (missingKey) => 
-                  <li>
-                    <Link text={missingKey.name} href={missingKey.link}/>
-                  </li>
-                
-              )}
-            </ul>
-            </>}
-      {progress.missing == 0  && <p>This translation is complete, amazing job! 🎉</p>}
-    </details>
+        <ul>
+          {keys
+            .filter((key) => key.status == "missing")
+            .map((missingKey) => (
+              <li>
+                <Link text={missingKey.name} href={missingKey.link} />
+              </li>
+            ))}
+        </ul>
+      </>
+    )
+  }
+  {
+    progress.missing == 0 && (
+      <p>This translation is complete, amazing job! 🎉</p>
+    )
+  }
+</details>
 
-    <style>
-      
-.progress-details {
-  margin-bottom: 1.25rem;
-}
+<style>
+  .progress-details {
+    margin-bottom: 1.25rem;
+  }
 
-details summary {
-  cursor: pointer;
-  user-select: none;
-}
+  details summary {
+    cursor: pointer;
+    user-select: none;
+  }
 
-details summary:hover strong,
-details summary:hover::marker {
-  color: var(--ln-color-gray-5);
-}
+  details summary:hover strong,
+  details summary:hover::marker {
+    color: var(--ln-color-gray-5);
+  }
 
-details p {
-  margin-top: 1.2rem;
-}
+  details p {
+    margin-top: 1.2rem;
+  }
 
-details h3 {
-  margin-top: 1.2rem;
-  font-size: 0.8rem;
-}
+  details h3 {
+    margin-top: 1.2rem;
+    font-size: 0.8rem;
+  }
 
-details h4 {
-  margin-top: 1rem;
-  font-size: 0.8rem;
-}
+  details h4 {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+  }
 
-details > :last-child {
-  margin-bottom: 1rem;
-}
-      
-.progress-summary {
-  font-size: 0.8125rem;
-}
-    </style>
+  details > :last-child {
+    margin-bottom: 1rem;
+  }
 
+  .progress-summary {
+    font-size: 0.8125rem;
+  }
+</style>

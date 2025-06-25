@@ -1,31 +1,23 @@
 ---
-import type { Progress } from '../schemas';
+import type { Progress } from "../schemas";
 
 interface Props {
-  progress: Progress
+  progress: Progress;
 }
 
-const {
-  total,
-  missing,
-  size = 20,
-} = Astro.props.progress;
+const { total, missing, size = 20 } = Astro.props.progress;
 
 const missingSize = Math.round((missing / total) * size);
 const doneSize = size - missingSize;
 
-const getBlocks = (count: number, type: 'done' | 'missing') => {
+const getBlocks = (count: number, type: "done" | "missing") => {
   return Array.from({ length: count }, () => type);
 };
 ---
 
 <div class="progress-bar" aria-hidden="true">
-  {getBlocks(doneSize, 'done').map((_, i) => (
-    <div class="done-bar" />
-  ))}
-  {getBlocks(missingSize, 'missing').map((_, i) => (
-    <div class="missing-bar" />
-  ))}
+  {getBlocks(doneSize, "done").map((_, i) => <div class="done-bar" />)}
+  {getBlocks(missingSize, "missing").map((_, i) => <div class="missing-bar" />)}
 </div>
 
 <style>
@@ -42,7 +34,7 @@ const getBlocks = (count: number, type: 'done' | 'missing') => {
   .progress-bar div:last-of-type {
     border-radius: 0px 36px 36px 0px;
   }
-  
+
   .done-bar,
   .missing-bar {
     width: 1rem;

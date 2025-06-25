@@ -2,30 +2,39 @@
 import StatusByKey from "../components/StatusByKey.astro";
 import StatusByLocale from "../components/StatusByLocale.astro";
 import { convertToKeyStatuses, type DataPerPlugin } from "../utils";
-import "../styles/globals.css"
-import "../styles/variables.css"
+import "../styles/globals.css";
+import "../styles/variables.css";
 import Overview from "../components/Overview.astro";
 
 interface Props {
   title: string;
-  pluginsData: DataPerPlugin[]
+  pluginsData: DataPerPlugin[];
 }
 
 const { title, pluginsData } = Astro.props as Props;
 
-const keyStatuses = convertToKeyStatuses(pluginsData)
+const keyStatuses = convertToKeyStatuses(pluginsData);
 ---
 
 <html lang="en">
-    <head>  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-  <title>{title}</title>
-  <meta name="description" content="Tracking translation progress of Starlight plugins UI translations" />
-  <meta property="og:title" content={title} />
-  <meta property="og:type" content="website" />
-  <meta property="og:description" content="Tracking translation progress of Starlight plugins UI translations" />
-      
-    </head>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, minimum-scale=1"
+    />
+    <title>{title}</title>
+    <meta
+      name="description"
+      content="Tracking translation progress of Starlight plugins UI translations"
+    />
+    <meta property="og:title" content={title} />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:description"
+      content="Tracking translation progress of Starlight plugins UI translations"
+    />
+  </head>
   <body>
     <main>
       <div class="limit-to-viewport">

@@ -30,7 +30,9 @@ async function fetchTranslationFile(url: string): Promise<TranslationMap> {
   if (!match) throw new Error("Could not find Translations object in the file");
 
   // Safely eval or use Function constructor (sandboxing highly recommended in real prod code)
-  const translationObject = new Function(`return ${match[1]}`)() as TranslationMap;
+  const translationObject = new Function(
+    `return ${match[1]}`
+  )() as TranslationMap;
   return translationObject;
 }
 
@@ -71,7 +73,9 @@ export async function processPlugins(): Promise<DataPerPlugin[]> {
   return results;
 }
 
-export function pluginToLanguageTransformer(plugins: DataPerPlugin[]): DataPerLanguage[] {
+export function pluginToLanguageTransformer(
+  plugins: DataPerPlugin[]
+): DataPerLanguage[] {
   const languageMap = new Map<string, Record<Status, string[]>>();
 
   for (const plugin of plugins) {
@@ -128,11 +132,16 @@ export function getLocaleByLang(lang: string): Locale {
   return locale;
 }
 
-export function keyStatusesToLocaleKeys(keyStatuses: KeyStatus[], targetLocale: Locale): LocaleKeys {
+export function keyStatusesToLocaleKeys(
+  keyStatuses: KeyStatus[],
+  targetLocale: Locale
+): LocaleKeys {
   return {
     locale: targetLocale,
     keys: keyStatuses.map((ks) => {
-      const statusEntry = ks.statuses.find((s) => s.locale.lang === targetLocale.lang);
+      const statusEntry = ks.statuses.find(
+        (s) => s.locale.lang === targetLocale.lang
+      );
       return {
         ...ks.key,
         status: statusEntry?.status ?? "missing", // fallback to 'missing' if not found
@@ -141,8 +150,13 @@ export function keyStatusesToLocaleKeys(keyStatuses: KeyStatus[], targetLocale: 
   };
 }
 
-export function convertKeyStatusesToLocaleKeys(keyStatuses: KeyStatus[]): LocaleKeys[] {
-  const localeMap = new Map<string, { locale: Locale; keys: { name: string; link: string; status: Status }[] }>();
+export function convertKeyStatusesToLocaleKeys(
+  keyStatuses: KeyStatus[]
+): LocaleKeys[] {
+  const localeMap = new Map<
+    string,
+    { locale: Locale; keys: { name: string; link: string; status: Status }[] }
+  >();
 
   for (const { key, statuses } of keyStatuses) {
     for (const { locale, status } of statuses) {

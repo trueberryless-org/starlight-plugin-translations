@@ -5,7 +5,8 @@ export const DashboardData: Dashboard = {
     {
       name: "Starlight Blog",
       packageName: "starlight-blog",
-      translationFileLink: "https://github.com/HiDeoo/starlight-blog/blob/main/packages/starlight-blog/translations.ts",
+      translationFileLink:
+        "https://github.com/HiDeoo/starlight-blog/blob/main/packages/starlight-blog/translations.ts",
       translationFileLinkRaw:
         "https://raw.githubusercontent.com/HiDeoo/starlight-blog/refs/heads/main/packages/starlight-blog/translations.ts",
     },
@@ -28,14 +29,16 @@ export const DashboardData: Dashboard = {
     {
       name: "Starlight Videos",
       packageName: "starlight-videos",
-      translationFileLink: "https://github.com/HiDeoo/starlight-videos/blob/main/packages/starlight-videos/translations.ts",
+      translationFileLink:
+        "https://github.com/HiDeoo/starlight-videos/blob/main/packages/starlight-videos/translations.ts",
       translationFileLinkRaw:
         "https://raw.githubusercontent.com/HiDeoo/starlight-videos/refs/heads/main/packages/starlight-videos/translations.ts",
     },
     {
       name: "Starlight Kbd",
       packageName: "starlight-kbd",
-      translationFileLink: "https://github.com/HiDeoo/starlight-kbd/blob/main/packages/starlight-kbd/translations.ts",
+      translationFileLink:
+        "https://github.com/HiDeoo/starlight-kbd/blob/main/packages/starlight-kbd/translations.ts",
       translationFileLinkRaw:
         "https://raw.githubusercontent.com/HiDeoo/starlight-kbd/refs/heads/main/packages/starlight-kbd/translations.ts",
     },

@@ -3,16 +3,32 @@ import { z } from "astro/zod";
 const StatusSchema = z.enum(["done", "missing"]);
 
 const PluginSchema = z.object({
-  name: z.string().describe("The name of the plugin that will be displayed on the website"),
+  name: z
+    .string()
+    .describe("The name of the plugin that will be displayed on the website"),
   packageName: z
     .string()
-    .describe("The package name of the plugin as it is published on npm and named on GitHub which will be used for URL slugs"),
-  translationFileLink: z.string().describe("A link to the translations.ts file of the plugin (preferably GitHub)"),
-  translationFileLinkRaw: z.string().describe("A link to the raw content of the translations.ts file of the plugin (preferably GitHub)"),
+    .describe(
+      "The package name of the plugin as it is published on npm and named on GitHub which will be used for URL slugs"
+    ),
+  translationFileLink: z
+    .string()
+    .describe(
+      "A link to the translations.ts file of the plugin (preferably GitHub)"
+    ),
+  translationFileLinkRaw: z
+    .string()
+    .describe(
+      "A link to the raw content of the translations.ts file of the plugin (preferably GitHub)"
+    ),
 });
 
 const LocaleSchema = z.object({
-  label: z.string().describe('The label of the locale to show in the status dashboard, e.g. `"English"`, `"Português"`, or `"Español"`'),
+  label: z
+    .string()
+    .describe(
+      'The label of the locale to show in the status dashboard, e.g. `"English"`, `"Português"`, or `"Español"`'
+    ),
   lang: z
     .string()
     .describe(

@@ -1,9 +1,14 @@
 :root {
   /** Fonts */
-  --ln-font-fallback: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+  --ln-font-fallback:
+    -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif,
+    Apple Color Emoji, Segoe UI Emoji;
   --ln-font-body: system-ui, var(--ln-font-fallback);
-  --ln-font-mono: "IBM Plex Mono", Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono",
-    "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+  --ln-font-mono:
+    "IBM Plex Mono", Consolas, "Andale Mono WT", "Andale Mono",
+    "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono",
+    "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco,
+    "Courier New", Courier, monospace;
 
   /* Light theme colors */
   --ln-color-white: #f9fafb;
@@ -28,9 +33,13 @@
   --overlay-blurple: hsla(255, 60%, 60%, 0.2);
 
   /** Contextual colors */
-  --ln-color-background: linear-gradient(215deg, var(--overlay-blurple), transparent 40%),
-    radial-gradient(var(--overlay-blurple), transparent 40%) no-repeat -60vw -40vh / 105vw 200vh,
-    radial-gradient(var(--overlay-blurple), transparent 65%) no-repeat 50% calc(100% + 20rem) / 60rem 30rem, var(--theme-bg);
+  --ln-color-background:
+    linear-gradient(215deg, var(--overlay-blurple), transparent 40%),
+    radial-gradient(var(--overlay-blurple), transparent 40%)
+      no-repeat -60vw -40vh / 105vw 200vh,
+    radial-gradient(var(--overlay-blurple), transparent 65%) no-repeat 50%
+      calc(100% + 20rem) / 60rem 30rem,
+    var(--theme-bg);
   --ln-color-link: var(--theme-accent);
   --ln-color-black: var(--theme-text);
   --ln-color-done: var(--ln-color-blue);

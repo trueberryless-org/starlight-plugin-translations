@@ -4,9 +4,9 @@ import { processPlugins } from "../../utils";
 
 export async function getStaticPaths() {
   const pluginsData = await processPlugins();
-  return pluginsData.map(plugin => ({
+  return pluginsData.map((plugin) => ({
     params: { plugin: plugin.packageName },
-    props: { pluginsData: plugin }
+    props: { pluginsData: plugin },
   }));
 }
 
@@ -16,6 +16,8 @@ const title = pluginsData.name + " Translation Tracker";
 
 <LunariaLayout {title} pluginsData={[pluginsData]}>
   <p slot="description">
-    You are viewing the translation tracker for the <a href={pluginsData.translationFileLink}>{pluginsData.name}</a> plugin.
+    You are viewing the translation tracker for the <a
+      href={pluginsData.translationFileLink}>{pluginsData.name}</a
+    > plugin.
   </p>
 </LunariaLayout>
