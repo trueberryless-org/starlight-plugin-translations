@@ -19,12 +19,12 @@ export const DashboardData: Dashboard = {
         "https://raw.githubusercontent.com/trueberryless-org/starlight-cooler-credit/refs/heads/main/packages/starlight-cooler-credit/translations.ts",
     },
     {
-      name: "Starlight View Modes",
-      packageName: "starlight-view-modes",
+      name: "Starlight Kbd",
+      packageName: "starlight-kbd",
       translationFileLink:
-        "https://github.com/trueberryless-org/starlight-view-modes/blob/main/packages/starlight-view-modes/translations.ts",
+        "https://github.com/HiDeoo/starlight-kbd/blob/main/packages/starlight-kbd/translations.ts",
       translationFileLinkRaw:
-        "https://raw.githubusercontent.com/trueberryless-org/starlight-view-modes/refs/heads/main/packages/starlight-view-modes/translations.ts",
+        "https://raw.githubusercontent.com/HiDeoo/starlight-kbd/refs/heads/main/packages/starlight-kbd/translations.ts",
     },
     {
       name: "Starlight Videos",
@@ -35,12 +35,12 @@ export const DashboardData: Dashboard = {
         "https://raw.githubusercontent.com/HiDeoo/starlight-videos/refs/heads/main/packages/starlight-videos/translations.ts",
     },
     {
-      name: "Starlight Kbd",
-      packageName: "starlight-kbd",
+      name: "Starlight View Modes",
+      packageName: "starlight-view-modes",
       translationFileLink:
-        "https://github.com/HiDeoo/starlight-kbd/blob/main/packages/starlight-kbd/translations.ts",
+        "https://github.com/trueberryless-org/starlight-view-modes/blob/main/packages/starlight-view-modes/translations.ts",
       translationFileLinkRaw:
-        "https://raw.githubusercontent.com/HiDeoo/starlight-kbd/refs/heads/main/packages/starlight-kbd/translations.ts",
+        "https://raw.githubusercontent.com/trueberryless-org/starlight-view-modes/refs/heads/main/packages/starlight-view-modes/translations.ts",
     },
   ],
   locales: [
