@@ -5,7 +5,3 @@
 Licensed under the MIT license, Copyright © trueberryless.
 
 See [LICENSE](/LICENSE) for more information.
-
-# Starlight Plugins Translation Tracker
-
-## License
