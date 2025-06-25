@@ -20,6 +20,18 @@ export type DataPerLanguage = {
   statuses: Record<Status, string[]>;
 };
 
+const pluralSuffixes = ["_zero", "_one", "_two", "_few", "_many", "_other"];
+
+// Normalize default keys by stripping i18next plural suffixes
+function normalizeKey(key: string): string {
+  for (const suffix of pluralSuffixes) {
+    if (key.endsWith(suffix)) {
+      return key.slice(0, -suffix.length);
+    }
+  }
+  return key;
+}
+
 // Utility to fetch the remote .ts file and parse it
 async function fetchTranslationFile(url: string): Promise<TranslationMap> {
   const res = await fetch(url);
@@ -44,17 +56,20 @@ export async function processPlugins(): Promise<DataPerPlugin[]> {
 
     const defaultLang = "en";
     const defaultKeys = new Set(Object.keys(data[defaultLang] || {}));
+    const normalizedDefaultKeys = new Set([...defaultKeys].map(normalizeKey));
     const allLocales = DashboardData.locales.map((l) => l.lang);
 
     const keysStatus: DataPerKey[] = [];
 
-    for (const key of defaultKeys) {
+    for (const key of normalizedDefaultKeys) {
       const localesStatus: Record<string, Status> = {};
 
       for (const lang of allLocales) {
         if (lang === defaultLang) continue;
 
-        const hasTranslation = !!data[lang]?.[key];
+        const hasTranslation = Object.keys(data[lang] || {}).some(
+          (k) => normalizeKey(k) === key
+        );
         localesStatus[lang] = hasTranslation ? "done" : "missing";
       }
 
