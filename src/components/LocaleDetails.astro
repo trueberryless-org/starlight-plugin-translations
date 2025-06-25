@@ -34,6 +34,7 @@ const progress: Progress =  {
         <ProgressBar {progress}/>
       </summary>
       {progress.missing > 0 &&
+      <>
         <h3>Missing</h3>
             <ul>
               {keys.filter((key) => key.status == "missing").map(
@@ -43,7 +44,8 @@ const progress: Progress =  {
                   </li>
                 
               )}
-            </ul>}
+            </ul>
+            </>}
       {progress.missing == 0  && <p>This translation is complete, amazing job! 🎉</p>}
     </details>
 
