@@ -1,14 +1,20 @@
 {
   "name": "starlight-plugin-translations",
-  "type": "module",
   "version": "0.1.0",
+  "type": "module",
   "scripts": {
-    "dev": "astro dev",
+    "astro": "astro",
     "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "dev": "astro dev",
+    "preview": "astro preview"
   },
   "dependencies": {
     "astro": "^5.10.1"
-  }
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "5.2.2",
+    "prettier": "3.5.3",
+    "prettier-plugin-astro": "0.14.1"
+  },
+  "packageManager": "pnpm@10.10.0"
 }
