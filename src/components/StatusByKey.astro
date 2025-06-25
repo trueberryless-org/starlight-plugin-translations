@@ -1,0 +1,129 @@
+---
+import type { KeyStatus } from '../schemas';
+import Link from './Link.astro';
+
+interface Props {
+  keyStatuses: KeyStatus[]
+}
+
+const {
+  keyStatuses
+} = Astro.props as Props;
+
+const langs = Array.from(
+  new Set(
+    keyStatuses.flatMap((k) =>
+      k.statuses.map((s) => s.locale.lang)
+    )
+  )
+);
+---
+
+<h2 id="by-file">
+  <a href="#by-file">Translation status by file</a>
+</h2>
+<div class="table-scroll-wrapper">
+<table class="status-by-file">
+  <thead>
+    <tr>
+      <th>Key</th>
+      {langs.map((lang) => (
+        <th>{lang}</th>
+      ))}
+    </tr>
+  </thead>
+  <tbody>
+    {keyStatuses.map(
+      (keyStatus) => (
+        <tr>
+          <td><Link text={keyStatus.key.name} href={keyStatus.key.link}/></td>
+          {keyStatus.statuses.map((status) => (
+            <td>
+              {status.status == "done" && "✔"}
+              {status.status == "missing" && "❌"}
+            </td>
+          ))}
+        </tr>
+      )
+    )}
+  </tbody>
+</table>
+</div>
+<sup>❌ Missing   ✔ Done</sup>
+
+<style>
+  .table-scroll-wrapper {
+  overflow-x: auto;
+  max-width: 100%;
+  margin-bottom: 1rem;
+}
+  
+.status-by-file {
+  margin-bottom: 1rem;
+  border-collapse: collapse;
+  border: 1px solid var(--ln-color-table-border);
+  font-size: 0.8125rem;
+  column-gap: 64px;
+  overflow: hidden;
+}
+
+.status-by-file tr:first-of-type td {
+  padding-top: 0.5rem;
+}
+
+.status-by-file tr:last-of-type td {
+  padding-bottom: 0.5rem;
+}
+
+.status-by-file tr td:first-of-type {
+  padding-inline: 1rem;
+}
+
+.status-by-file th {
+  border-bottom: 1px solid var(--ln-color-table-border);
+  background: var(--ln-color-table-background);
+  position: sticky;
+  top: -1px;
+  white-space: nowrap;
+  padding-inline: 0.3rem;
+}
+
+.status-by-file th,
+.status-by-file td {
+  padding-block: 0.2rem;
+}
+
+.status-by-file tbody tr:hover td {
+  background: var(--ln-color-table-background);
+}
+
+.status-by-file th:first-of-type,
+.status-by-file td:first-of-type {
+  position: sticky;
+  left: -1px;
+  z-index: 1;
+  text-align: left;
+  padding-inline-start: 1rem;
+}
+
+.status-by-file td:first-of-type {
+  background: var(--theme-bg);
+}
+
+.status-by-file th:last-of-type,
+.status-by-file td:last-of-type {
+  text-align: center;
+  padding-inline-end: 1rem;
+}
+
+.status-by-file td:not(:first-of-type) {
+  min-width: 2rem;
+  text-align: center;
+  cursor: default;
+}
+
+.status-by-file td:not(:first-of-type) a {
+  text-decoration: none;
+}
+
+</style>

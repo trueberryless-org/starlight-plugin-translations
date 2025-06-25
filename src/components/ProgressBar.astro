@@ -1,0 +1,59 @@
+---
+import type { Progress } from '../schemas';
+
+interface Props {
+  progress: Progress
+}
+
+const {
+  total,
+  missing,
+  size = 20,
+} = Astro.props.progress;
+
+const missingSize = Math.round((missing / total) * size);
+const doneSize = size - missingSize;
+
+const getBlocks = (count: number, type: 'done' | 'missing') => {
+  return Array.from({ length: count }, () => type);
+};
+---
+
+<div class="progress-bar" aria-hidden="true">
+  {getBlocks(doneSize, 'done').map((_, i) => (
+    <div class="done-bar" />
+  ))}
+  {getBlocks(missingSize, 'missing').map((_, i) => (
+    <div class="missing-bar" />
+  ))}
+</div>
+
+<style>
+  .progress-bar {
+    display: flex;
+    flex-direction: row;
+    margin-top: 0.5rem;
+  }
+
+  .progress-bar div:first-of-type {
+    border-radius: 36px 0px 0px 36px;
+  }
+
+  .progress-bar div:last-of-type {
+    border-radius: 0px 36px 36px 0px;
+  }
+  
+  .done-bar,
+  .missing-bar {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .done-bar {
+    background-color: var(--ln-color-done);
+  }
+
+  .missing-bar {
+    background-color: var(--ln-color-missing);
+  }
+</style>

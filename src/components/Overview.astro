@@ -1,0 +1,35 @@
+---
+import { DashboardData } from "../data";
+
+
+const pluginLinks = DashboardData.plugins
+  .map(plugin => ({
+    name: plugin.name,
+    link: `/plugins/${plugin.packageName}`,
+  }));
+
+const localeLinks = DashboardData.locales
+  .map(locale => ({
+    label: locale.label,
+    link: `/languages/${locale.lang}`,
+  }));
+---
+
+<h2 id="by-plugin">
+  <a href="#by-plugin">View by plugin</a>
+</h2>
+<ul>
+  <li><a href="/">View All (Homepage)</a></li>
+  {pluginLinks.map((plugin) => (
+    <li><a href={plugin.link}>{plugin.name}</a></li>
+  ))}
+</ul>
+
+<h2 id="by-language">
+  <a href="#by-language">View by language</a>
+</h2>
+<ul>
+  {localeLinks.map((locale) => (
+    <li><a href={locale.link}>{locale.label}</a></li>
+  ))}
+</ul>

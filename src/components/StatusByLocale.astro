@@ -1,0 +1,22 @@
+---
+import { convertKeyStatusesToLocaleKeys } from '../utils';
+import type { KeyStatus, LocaleKeys } from '../schemas';
+import LocaleDetails from './LocaleDetails.astro';
+
+interface Props {
+  keyStatuses: KeyStatus[]
+}
+
+const {
+  keyStatuses
+} = Astro.props as Props;
+
+const localeKeys = convertKeyStatusesToLocaleKeys(keyStatuses);
+---
+
+<h2 id="by-locale">
+  <a href="#by-locale">Translation progress by locale</a>
+</h2>
+{localeKeys.map((locale: LocaleKeys) => (
+  <LocaleDetails localeKeys={locale} />
+))}

@@ -1,16 +1,18 @@
 ---
+import LunariaLayout from "../layouts/LunariaLayout.astro";
+import { processPlugins } from "../utils";
 
+const pluginsData = await processPlugins();
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<LunariaLayout title="Starlight Plugins Translation Tracker" {pluginsData}>
+  <p slot="description">
+    If you're interested in helping us translate various <a href="https://starlight.astro.build/resources/plugins/">Starlight plugins</a> that need translations into one of the languages listed below, you've come to the right place! This auto-updating page always lists all the content that could use your help right now. 
+  </p>
+  <p slot="description">
+    In order to translate a missing key into your language, you need to create a new section in the translation file (if you click on the link you get linked to this file) with your language and all the keys strings translated from the <code>"en"</code> section.
+  </p>
+  <p slot="description">
+    If you are a plugin author that wants to add their plugin to this website, be sure to follow the convention described in <a href="https://github.com/HiDeoo/">@HiDeoo</a>'s <a href="https://hideoo.dev/notes/starlight-plugin-use-custom-translation-strings">blog about translations in Starlight plugins</a> and then you can add your plugin to <a href="#">this list</a>.
+  </p>
+</LunariaLayout>

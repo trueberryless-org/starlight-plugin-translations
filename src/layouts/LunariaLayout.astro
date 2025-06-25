@@ -1,0 +1,50 @@
+---
+import StatusByKey from "../components/StatusByKey.astro";
+import StatusByLocale from "../components/StatusByLocale.astro";
+import { convertToKeyStatuses, type DataPerPlugin } from "../utils";
+import "../styles/globals.css"
+import "../styles/variables.css"
+import Overview from "../components/Overview.astro";
+
+interface Props {
+  title: string;
+  pluginsData: DataPerPlugin[]
+}
+
+const { title, pluginsData } = Astro.props as Props;
+
+const keyStatuses = convertToKeyStatuses(pluginsData)
+---
+
+<html lang="en">
+    <head>  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content="Tracking translation progress of Starlight plugins UI translations" />
+  <meta property="og:title" content={title} />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="Tracking translation progress of Starlight plugins UI translations" />
+      
+    </head>
+  <body>
+    <main>
+      <div class="limit-to-viewport">
+        <h1>{title}</h1>
+        <slot name="description" />
+        <StatusByLocale {keyStatuses} />
+      </div>
+      <StatusByKey {keyStatuses} />
+      <Overview />
+    </main>
+  </body>
+</html>
+
+<style>
+  main {
+    max-width: 80ch;
+    margin-inline: auto;
+  }
+  .limit-to-viewport {
+    max-width: calc(100vw - 2rem);
+  }
+</style>
