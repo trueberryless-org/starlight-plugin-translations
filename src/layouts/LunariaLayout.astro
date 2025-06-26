@@ -41,14 +41,16 @@ const keyStatuses = convertToKeyStatuses(pluginsData);
       missing.
     </div>
     <DropdownLinks />
-    <main>
-      <div class="limit-to-viewport">
-        <h1>{title}</h1>
-        <slot name="description" />
-        <StatusByLocale {keyStatuses} />
-      </div>
-      <StatusByKey {keyStatuses} />
-    </main>
+    <div class="content">
+      <main>
+        <div class="limit-to-viewport">
+          <h1>{title}</h1>
+          <slot name="description" />
+          <StatusByLocale {keyStatuses} />
+        </div>
+        <StatusByKey {keyStatuses} />
+      </main>
+    </div>
   </body>
 </html>
 
@@ -64,10 +66,12 @@ const keyStatuses = convertToKeyStatuses(pluginsData);
     font-weight: 500;
     border-bottom: 1px solid #facc15;
   }
+  .content {
+    margin: 2rem;
+  }
   main {
     max-width: 80ch;
     margin-inline: auto;
-    padding: 2rem;
   }
   .limit-to-viewport {
     max-width: calc(100vw - 2rem);

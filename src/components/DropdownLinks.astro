@@ -35,6 +35,9 @@ const localeLinks = filteredLocales.map((locale) => ({
 
 <nav class="top-dropdown-menu" role="navigation" aria-label="Main menu">
   <ul class="menu-list">
+    <li class="menu-button" style="text-decoration: none;">
+      <a href="/" style="color: inherit;">Home</a>
+    </li>
     <li class="menu-item" data-menu="plugin">
       <button
         class="menu-button"
@@ -45,7 +48,6 @@ const localeLinks = filteredLocales.map((locale) => ({
         View by plugin ▾
       </button>
       <ul class="submenu" hidden>
-        <li><a href="/">View All (Homepage)</a></li>
         {
           pluginLinks.map((plugin) => (
             <li>

@@ -39,9 +39,9 @@ const filteredPluginsData: DataPerPlugin[] = pluginsData
   .filter((plugin): plugin is DataPerPlugin => plugin !== null);
 
 const title =
-  "Starlight Plugins " +
+  "Starlight Plugin " +
   getLocaleByLang(language).label +
-  " Translation Tracker";
+  " Translations Tracker";
 ---
 
 <LunariaLayout {title} pluginsData={filteredPluginsData}>
