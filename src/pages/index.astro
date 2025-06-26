@@ -4,7 +4,6 @@ import { processPlugins } from "../utils";
 
 const pluginsData = await processPlugins();
 const buildTimeISO = new Date().toISOString(); // Build timestamp
-const scheduledTimeUTC = "00:00"; // Static, from GitHub Actions cron
 ---
 
 <LunariaLayout title="Starlight Plugins Translation Tracker" {pluginsData}>

@@ -15,8 +15,6 @@ body {
   font-family: var(--ln-font-body);
   font-size: 16px;
   line-height: 1.5;
-  margin-block: 2rem;
-  margin-inline: 1rem;
 }
 
 h1,
