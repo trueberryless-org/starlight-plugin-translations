@@ -3,6 +3,8 @@ import LunariaLayout from "../layouts/LunariaLayout.astro";
 import { processPlugins } from "../utils";
 
 const pluginsData = await processPlugins();
+const buildTimeISO = new Date().toISOString(); // Build timestamp
+const scheduledTimeUTC = "00:00"; // Static, from GitHub Actions cron
 ---
 
 <LunariaLayout title="Starlight Plugins Translation Tracker" {pluginsData}>
@@ -14,21 +16,34 @@ const pluginsData = await processPlugins();
     to the plugin author.
   </p>
   <p slot="description">
-    In order to translate a missing key into your language, you need to create a
-    new section in the translation file (if you click on the link you get linked
-    to this file) with your language and all the keys strings translated from
-    the <code>"en"</code> section.
-  </p>
-  <p slot="description">
-    If you are a plugin author that wants to add their plugin to this website,
-    be sure to follow the convention described in <a
-      href="https://github.com/HiDeoo/">@HiDeoo</a
-    >'s <a
-      href="https://hideoo.dev/notes/starlight-plugin-use-custom-translation-strings"
-      >blog about translations in Starlight plugins</a
-    > and then you can add your plugin to <a
-      href="https://github.com/trueberryless-org/starlight-plugin-translations/blob/main/src%2Fdata.ts"
-      >this list</a
-    >.
+    This website is automatically updated every day at
+    <span id="local-schedule-time" data-time="00:00">0:00 AM UTC</span>. The
+    current version was last built on
+    <span id="build-time" data-iso={buildTimeISO}>loading…</span>. Please check
+    the plugin repository for the most up-to-date information.
   </p>
 </LunariaLayout>
+
+<script>
+  // Format the last build time for the user's locale
+  const buildTimeEl = document.getElementById("build-time");
+  const buildTime = new Date(buildTimeEl.dataset.iso);
+  buildTimeEl.textContent = buildTime.toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+
+  // Convert 02:00 UTC to local time
+  const scheduleEl = document.getElementById("local-schedule-time");
+  const utcTime = scheduleEl.dataset.time;
+  const [h, m] = utcTime.split(":").map(Number);
+  const now = new Date();
+  const localScheduled = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), h, m)
+  );
+  scheduleEl.textContent = localScheduled.toLocaleTimeString(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZoneName: "short",
+  });
+</script>
