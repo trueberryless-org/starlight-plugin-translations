@@ -33,66 +33,80 @@ function normalizeKey(key: string): string {
   return key;
 }
 
-// Utility to fetch the remote .ts file and parse it
-async function fetchTranslationFile(
-  url: string
-): Promise<{ data: TranslationMap; enLineNumbers: Record<string, number> }> {
+async function fetchTranslationFileRaw(url: string): Promise<string> {
   const res = await fetch(url);
-  const text = await res.text();
-  const lines = text.split("\n");
+  if (!res.ok) throw new Error(`Failed to fetch ${url}`);
+  return await res.text();
+}
 
+async function fetchTranslationFile(url: string): Promise<TranslationMap> {
+  const text = await fetchTranslationFileRaw(url);
+
+  // Extract the JSON-ish Translations object code
   const match = text.match(/export const Translations\s*=\s*(\{[\s\S]*\});?/);
   if (!match) throw new Error("Could not find Translations object in the file");
 
   const translationObject = new Function(
     `return ${match[1]}`
   )() as TranslationMap;
-
-  // Line number extraction (for English keys only)
-  const enLineNumbers: Record<string, number> = {};
-  let insideEn = false;
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-
-    if (!insideEn) {
-      if (/en:\s*\{/.test(line)) {
-        insideEn = true;
-      }
-      continue;
-    }
-
-    if (/^\s*\}/.test(line)) break;
-
-    const keyMatch = line.match(/['"`]([^'"`]+)['"`]\s*:/);
-    if (keyMatch) {
-      const rawKey = keyMatch[1];
-      const normalized = normalizeKey(rawKey);
-      enLineNumbers[normalized] = i + 1;
-    }
-  }
-
-  return { data: translationObject, enLineNumbers };
+  return translationObject;
 }
 
 export async function processPlugins(): Promise<DataPerPlugin[]> {
   const results: DataPerPlugin[] = [];
 
   for (const plugin of DashboardData.plugins) {
-    const { data, enLineNumbers } = await fetchTranslationFile(
+    // Fetch raw file text to extract line numbers for English keys
+    const rawText = await fetchTranslationFileRaw(
       plugin.translationFileLinkRaw
     );
+    const lines = rawText.split(/\r?\n/);
+
+    // Map base normalized key -> first line number (1-based)
+    const baseKeyToLine = new Map<string, number>();
+
+    // Simple key extractor regex: match keys in the 'en' object only
+    // Assumes key strings are single-quoted or double-quoted, e.g. 'key': or "key":
+    let insideEnBlock = false;
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+
+      if (/^en:\s*\{/.test(line)) {
+        insideEnBlock = true;
+        continue;
+      }
+      if (insideEnBlock && line === "},") {
+        // end of 'en' block
+        insideEnBlock = false;
+      }
+      if (insideEnBlock) {
+        // Try to extract key string from line like:
+        // 'starlightBlog.authors.count_one': '{{count}} post by {{author}}',
+        // or
+        // "some.key_here": "value",
+        const keyMatch = line.match(/^['"]([^'"]+)['"]\s*:/);
+        if (keyMatch) {
+          const rawKey = keyMatch[1];
+          const baseKey = normalizeKey(rawKey);
+          if (!baseKeyToLine.has(baseKey)) {
+            baseKeyToLine.set(baseKey, i + 1); // line numbers 1-based
+          }
+        }
+      }
+    }
+
+    // Now fetch parsed translations object for all locales
+    const data = await fetchTranslationFile(plugin.translationFileLinkRaw);
 
     const defaultLang = "en";
-    const defaultKeys = Object.keys(data[defaultLang] || {});
-    const normalizedDefaultKeys = defaultKeys.map(normalizeKey);
+    const defaultKeys = new Set(Object.keys(data[defaultLang] || {}));
+    const normalizedDefaultKeys = new Set([...defaultKeys].map(normalizeKey));
     const allLocales = DashboardData.locales.map((l) => l.lang);
 
     const keysStatus: DataPerKey[] = [];
 
     for (const key of normalizedDefaultKeys) {
-      const line = enLineNumbers[key] ?? null;
-      const localesStatus: Record<string, Status> = {};
+      const localesStatus: Record<string, "done" | "missing"> = {};
 
       for (const lang of allLocales) {
         if (lang === defaultLang) continue;
@@ -103,11 +117,9 @@ export async function processPlugins(): Promise<DataPerPlugin[]> {
         localesStatus[lang] = hasTranslation ? "done" : "missing";
       }
 
-      keysStatus.push({
-        key,
-        line,
-        locales: localesStatus,
-      });
+      const line = baseKeyToLine.get(key)!; // must exist
+
+      keysStatus.push({ key, locales: localesStatus, line });
     }
 
     results.push({
