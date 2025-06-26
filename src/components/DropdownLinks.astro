@@ -1,0 +1,141 @@
+---
+import { DashboardData } from "../data";
+
+const pluginLinks = DashboardData.plugins.map((plugin) => ({
+  name: plugin.name,
+  link: `/plugins/${plugin.packageName}`,
+}));
+
+const localeLinks = DashboardData.locales.map((locale) => ({
+  label: locale.label,
+  link: `/languages/${locale.lang}`,
+}));
+---
+
+<nav class="top-dropdown-menu">
+  <ul class="menu-list">
+    <li class="menu-item">
+      <button aria-haspopup="true" aria-expanded="false" class="menu-button">
+        View by plugin ▾
+      </button>
+      <ul class="submenu">
+        <li><a href="/">View All (Homepage)</a></li>
+        {
+          pluginLinks.map((plugin) => (
+            <li>
+              <a href={plugin.link}>{plugin.name}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </li>
+    <li class="menu-item">
+      <button aria-haspopup="true" aria-expanded="false" class="menu-button">
+        View by language ▾
+      </button>
+      <ul class="submenu">
+        {
+          localeLinks.map((locale) => (
+            <li>
+              <a href={locale.link}>{locale.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<style>
+  /* Container */
+  .top-dropdown-menu {
+    background-color: var(--ln-color-gray-1);
+    font-family: var(--ln-font-body);
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--ln-color-gray-3);
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Top-level menu */
+  .menu-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 2rem;
+  }
+
+  .menu-item {
+    position: relative;
+  }
+
+  .menu-button {
+    all: unset;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--ln-color-black);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s ease;
+    user-select: none;
+  }
+
+  .menu-button:hover,
+  .menu-button:focus {
+    background-color: var(--ln-color-blue);
+    color: var(--ln-color-white);
+    outline-offset: 2px;
+    outline: 2px solid var(--ln-color-blue);
+  }
+
+  /* Submenu (dropdown) */
+  .submenu {
+    list-style: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background-color: var(--ln-color-gray-1);
+    padding: 0.5rem 0;
+    margin: 0;
+    min-width: 180px;
+    box-shadow: 0 6px 12px var(--ln-color-gray-3);
+    border-radius: 0.25rem;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease;
+    z-index: 100;
+  }
+
+  /* Show submenu on hover */
+  .menu-item:hover > .submenu,
+  .menu-item:focus-within > .submenu {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  /* Submenu links */
+  .submenu li {
+    padding: 0;
+  }
+
+  .submenu a {
+    display: block;
+    padding: 0.4rem 1rem;
+    color: var(--ln-color-black);
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.15s ease;
+  }
+
+  .submenu a:hover,
+  .submenu a:focus {
+    background-color: var(--ln-color-blue);
+    color: var(--ln-color-white);
+    outline: none;
+  }
+</style>

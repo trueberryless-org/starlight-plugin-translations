@@ -4,7 +4,7 @@ import StatusByLocale from "../components/StatusByLocale.astro";
 import { convertToKeyStatuses, type DataPerPlugin } from "../utils";
 import "../styles/globals.css";
 import "../styles/variables.css";
-import Overview from "../components/Overview.astro";
+import DropdownLinks from "../components/DropdownLinks.astro";
 
 interface Props {
   title: string;
@@ -40,6 +40,7 @@ const keyStatuses = convertToKeyStatuses(pluginsData);
       🚧 This website is under development. Some important features are still
       missing.
     </div>
+    <DropdownLinks />
     <main>
       <div class="limit-to-viewport">
         <h1>{title}</h1>
@@ -47,7 +48,6 @@ const keyStatuses = convertToKeyStatuses(pluginsData);
         <StatusByLocale {keyStatuses} />
       </div>
       <StatusByKey {keyStatuses} />
-      <Overview />
     </main>
   </body>
 </html>
