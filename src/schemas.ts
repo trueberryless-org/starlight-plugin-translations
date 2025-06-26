@@ -50,6 +50,7 @@ const ProgressSchema = z.object({
 const KeySchema = z.object({
   name: z.string(),
   link: z.string(),
+  lineNumber: z.number(),
 });
 
 const LocaleKeysSchema = z.object({

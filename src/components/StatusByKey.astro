@@ -29,7 +29,10 @@ const langs = Array.from(
         keyStatuses.map((keyStatus) => (
           <tr>
             <td>
-              <Link text={keyStatus.key.name} href={keyStatus.key.link} />
+              <Link
+                text={keyStatus.key.name}
+                href={`${keyStatus.key.link}#L${keyStatus.key.lineNumber}`}
+              />
             </td>
             {keyStatus.statuses.map((status) => (
               <td>

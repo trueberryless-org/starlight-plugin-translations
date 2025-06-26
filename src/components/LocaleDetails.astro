@@ -38,7 +38,10 @@ const progress: Progress = {
             .filter((key) => key.status == "missing")
             .map((missingKey) => (
               <li>
-                <Link text={missingKey.name} href={missingKey.link} />
+                <Link
+                  text={missingKey.name}
+                  href={`${missingKey.link}#L${missingKey.lineNumber}`}
+                />
               </li>
             ))}
         </ul>

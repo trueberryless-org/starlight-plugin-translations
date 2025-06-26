@@ -5,6 +5,7 @@ type TranslationMap = Record<string, Record<string, string>>; // lang -> key -> 
 export type DataPerKey = {
   key: string;
   locales: Record<string, Status>;
+  line: number;
 };
 
 export type DataPerPlugin = {
@@ -33,35 +34,64 @@ function normalizeKey(key: string): string {
 }
 
 // Utility to fetch the remote .ts file and parse it
-async function fetchTranslationFile(url: string): Promise<TranslationMap> {
+async function fetchTranslationFile(
+  url: string
+): Promise<{ data: TranslationMap; enLineNumbers: Record<string, number> }> {
   const res = await fetch(url);
   const text = await res.text();
+  const lines = text.split("\n");
 
-  // Extract the JSON-ish object from the file
   const match = text.match(/export const Translations\s*=\s*(\{[\s\S]*\});?/);
   if (!match) throw new Error("Could not find Translations object in the file");
 
-  // Safely eval or use Function constructor (sandboxing highly recommended in real prod code)
   const translationObject = new Function(
     `return ${match[1]}`
   )() as TranslationMap;
-  return translationObject;
+
+  // Line number extraction (for English keys only)
+  const enLineNumbers: Record<string, number> = {};
+  let insideEn = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    if (!insideEn) {
+      if (/en:\s*\{/.test(line)) {
+        insideEn = true;
+      }
+      continue;
+    }
+
+    if (/^\s*\}/.test(line)) break;
+
+    const keyMatch = line.match(/['"`]([^'"`]+)['"`]\s*:/);
+    if (keyMatch) {
+      const rawKey = keyMatch[1];
+      const normalized = normalizeKey(rawKey);
+      enLineNumbers[normalized] = i + 1;
+    }
+  }
+
+  return { data: translationObject, enLineNumbers };
 }
 
 export async function processPlugins(): Promise<DataPerPlugin[]> {
   const results: DataPerPlugin[] = [];
 
   for (const plugin of DashboardData.plugins) {
-    const data = await fetchTranslationFile(plugin.translationFileLinkRaw);
+    const { data, enLineNumbers } = await fetchTranslationFile(
+      plugin.translationFileLinkRaw
+    );
 
     const defaultLang = "en";
-    const defaultKeys = new Set(Object.keys(data[defaultLang] || {}));
-    const normalizedDefaultKeys = new Set([...defaultKeys].map(normalizeKey));
+    const defaultKeys = Object.keys(data[defaultLang] || {});
+    const normalizedDefaultKeys = defaultKeys.map(normalizeKey);
     const allLocales = DashboardData.locales.map((l) => l.lang);
 
     const keysStatus: DataPerKey[] = [];
 
     for (const key of normalizedDefaultKeys) {
+      const line = enLineNumbers[key] ?? null;
       const localesStatus: Record<string, Status> = {};
 
       for (const lang of allLocales) {
@@ -73,7 +103,11 @@ export async function processPlugins(): Promise<DataPerPlugin[]> {
         localesStatus[lang] = hasTranslation ? "done" : "missing";
       }
 
-      keysStatus.push({ key, locales: localesStatus });
+      keysStatus.push({
+        key,
+        line,
+        locales: localesStatus,
+      });
     }
 
     results.push({
@@ -124,6 +158,7 @@ export function convertToKeyStatuses(data: DataPerPlugin[]): KeyStatus[] {
           key: {
             name: entry.key,
             link: plugin.translationFileLink,
+            lineNumber: entry.line,
           },
           statuses: [],
         });
@@ -170,7 +205,15 @@ export function convertKeyStatusesToLocaleKeys(
 ): LocaleKeys[] {
   const localeMap = new Map<
     string,
-    { locale: Locale; keys: { name: string; link: string; status: Status }[] }
+    {
+      locale: Locale;
+      keys: {
+        name: string;
+        link: string;
+        lineNumber: number;
+        status: Status;
+      }[];
+    }
   >();
 
   for (const { key, statuses } of keyStatuses) {
@@ -180,6 +223,7 @@ export function convertKeyStatusesToLocaleKeys(
       const keyEntry = {
         name: key.name,
         link: key.link,
+        lineNumber: key.lineNumber,
         status,
       };
 
