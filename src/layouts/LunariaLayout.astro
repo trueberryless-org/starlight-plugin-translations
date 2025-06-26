@@ -36,6 +36,10 @@ const keyStatuses = convertToKeyStatuses(pluginsData);
     />
   </head>
   <body>
+    <div class="dev-banner">
+      🚧 This website is under development. Some important features are still
+      missing.
+    </div>
     <main>
       <div class="limit-to-viewport">
         <h1>{title}</h1>
@@ -49,6 +53,17 @@ const keyStatuses = convertToKeyStatuses(pluginsData);
 </html>
 
 <style>
+  body {
+    margin: 0;
+  }
+  .dev-banner {
+    background-color: #fffbeb;
+    color: #92400e;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 500;
+    border-bottom: 1px solid #facc15;
+  }
   main {
     max-width: 80ch;
     margin-inline: auto;
