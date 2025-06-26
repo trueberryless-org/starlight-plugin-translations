@@ -12,13 +12,18 @@ const localeLinks = DashboardData.locales.map((locale) => ({
 }));
 ---
 
-<nav class="top-dropdown-menu">
+<nav class="top-dropdown-menu" role="navigation" aria-label="Main menu">
   <ul class="menu-list">
-    <li class="menu-item">
-      <button aria-haspopup="true" aria-expanded="false" class="menu-button">
+    <li class="menu-item" data-menu="plugin">
+      <button
+        class="menu-button"
+        aria-haspopup="true"
+        aria-expanded="false"
+        type="button"
+      >
         View by plugin ▾
       </button>
-      <ul class="submenu">
+      <ul class="submenu" hidden>
         <li><a href="/">View All (Homepage)</a></li>
         {
           pluginLinks.map((plugin) => (
@@ -29,11 +34,16 @@ const localeLinks = DashboardData.locales.map((locale) => ({
         }
       </ul>
     </li>
-    <li class="menu-item">
-      <button aria-haspopup="true" aria-expanded="false" class="menu-button">
+    <li class="menu-item" data-menu="language">
+      <button
+        class="menu-button"
+        aria-haspopup="true"
+        aria-expanded="false"
+        type="button"
+      >
         View by language ▾
       </button>
-      <ul class="submenu">
+      <ul class="submenu" hidden>
         {
           localeLinks.map((locale) => (
             <li>
@@ -45,6 +55,50 @@ const localeLinks = DashboardData.locales.map((locale) => ({
     </li>
   </ul>
 </nav>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const menuItems = document.querySelectorAll(".menu-item");
+
+    menuItems.forEach((item) => {
+      const button = item.querySelector(".menu-button");
+      const submenu = item.querySelector(".submenu");
+
+      button.addEventListener("click", () => {
+        const expanded = button.getAttribute("aria-expanded") === "true";
+        // Close all other menus
+        menuItems.forEach((other) => {
+          if (other !== item) {
+            other.querySelector(".submenu").hidden = true;
+            other
+              .querySelector(".menu-button")
+              .setAttribute("aria-expanded", "false");
+          }
+        });
+
+        if (expanded) {
+          submenu.hidden = true;
+          button.setAttribute("aria-expanded", "false");
+        } else {
+          submenu.hidden = false;
+          button.setAttribute("aria-expanded", "true");
+        }
+      });
+    });
+
+    // Optional: close menu on outside click
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".top-dropdown-menu")) {
+        menuItems.forEach((item) => {
+          item.querySelector(".submenu").hidden = true;
+          item
+            .querySelector(".menu-button")
+            .setAttribute("aria-expanded", "false");
+        });
+      }
+    });
+  });
+</script>
 
 <style>
   /* Container */
@@ -89,9 +143,12 @@ const localeLinks = DashboardData.locales.map((locale) => ({
     outline: 2px solid var(--ln-color-blue);
   }
 
-  /* Submenu (dropdown) */
   .submenu {
-    list-style: none;
+    /* Keep all styles */
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: translateY(0) !important;
+
     position: absolute;
     top: 110%;
     left: 0;
@@ -101,13 +158,12 @@ const localeLinks = DashboardData.locales.map((locale) => ({
     min-width: 180px;
     box-shadow: 0 6px 12px var(--ln-color-gray-3);
     border-radius: 0.25rem;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(10px);
-    transition:
-      opacity 0.25s ease,
-      transform 0.25s ease;
     z-index: 100;
+  }
+
+  /* Hide when hidden attribute is present */
+  .submenu[hidden] {
+    display: none !important;
   }
 
   /* Show submenu on hover */
