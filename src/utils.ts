@@ -65,8 +65,6 @@ export async function processPlugins(): Promise<DataPerPlugin[]> {
     // Map base normalized key -> first line number (1-based)
     const baseKeyToLine = new Map<string, number>();
 
-    // Simple key extractor regex: match keys in the 'en' object only
-    // Assumes key strings are single-quoted or double-quoted, e.g. 'key': or "key":
     let insideEnBlock = false;
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
@@ -76,26 +74,20 @@ export async function processPlugins(): Promise<DataPerPlugin[]> {
         continue;
       }
       if (insideEnBlock && line === "},") {
-        // end of 'en' block
         insideEnBlock = false;
       }
       if (insideEnBlock) {
-        // Try to extract key string from line like:
-        // 'starlightBlog.authors.count_one': '{{count}} post by {{author}}',
-        // or
-        // "some.key_here": "value",
         const keyMatch = line.match(/^['"]([^'"]+)['"]\s*:/);
         if (keyMatch) {
           const rawKey = keyMatch[1];
           const baseKey = normalizeKey(rawKey);
           if (!baseKeyToLine.has(baseKey)) {
-            baseKeyToLine.set(baseKey, i + 1); // line numbers 1-based
+            baseKeyToLine.set(baseKey, i + 1);
           }
         }
       }
     }
 
-    // Now fetch parsed translations object for all locales
     const data = await fetchTranslationFile(plugin.translationFileLinkRaw);
 
     const defaultLang = "en";
@@ -117,7 +109,7 @@ export async function processPlugins(): Promise<DataPerPlugin[]> {
         localesStatus[lang] = hasTranslation ? "done" : "missing";
       }
 
-      const line = baseKeyToLine.get(key)!; // must exist
+      const line = baseKeyToLine.get(key)!;
 
       keysStatus.push({ key, locales: localesStatus, line });
     }
@@ -129,6 +121,31 @@ export async function processPlugins(): Promise<DataPerPlugin[]> {
       translationFileLinkRaw: plugin.translationFileLinkRaw,
       keys: keysStatus,
     });
+  }
+
+  // Now filter out languages with no 'done' status anywhere in any plugin
+  // Collect all languages that have 'done' status in any plugin's keys
+  const languagesWithTranslations = new Set<string>();
+
+  for (const plugin of results) {
+    for (const keyData of plugin.keys) {
+      for (const [lang, status] of Object.entries(keyData.locales)) {
+        if (status === "done") {
+          languagesWithTranslations.add(lang);
+        }
+      }
+    }
+  }
+
+  // Filter out locales in plugins keys for languages that never have any translation
+  for (const plugin of results) {
+    for (const keyData of plugin.keys) {
+      for (const lang of Object.keys(keyData.locales)) {
+        if (!languagesWithTranslations.has(lang)) {
+          delete keyData.locales[lang];
+        }
+      }
+    }
   }
 
   return results;

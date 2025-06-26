@@ -1,12 +1,33 @@
 ---
 import { DashboardData } from "../data";
+import { processPlugins } from "../utils";
 
+const plugins = await processPlugins();
+
+// Collect all languages with 'done' translation anywhere
+const languagesWithTranslations = new Set<string>();
+for (const plugin of plugins) {
+  for (const keyData of plugin.keys) {
+    for (const [lang, status] of Object.entries(keyData.locales)) {
+      if (status === "done") {
+        languagesWithTranslations.add(lang);
+      }
+    }
+  }
+}
+
+// Now filter the locales array accordingly
+const filteredLocales = DashboardData.locales.filter((locale) =>
+  languagesWithTranslations.has(locale.lang)
+);
+
+// Keep pluginLinks unchanged (or filter similarly if needed)
 const pluginLinks = DashboardData.plugins.map((plugin) => ({
   name: plugin.name,
   link: `/plugins/${plugin.packageName}`,
 }));
 
-const localeLinks = DashboardData.locales.map((locale) => ({
+const localeLinks = filteredLocales.map((locale) => ({
   label: locale.label,
   link: `/languages/${locale.lang}`,
 }));
