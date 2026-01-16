@@ -9,11 +9,11 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "^5.16.7"
+    "astro": "^5.16.11"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "6.0.2",
-    "prettier": "3.7.4",
+    "prettier": "3.8.0",
     "prettier-plugin-astro": "0.14.1"
   },
   "packageManager": "pnpm@10.10.0"
