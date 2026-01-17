@@ -35,6 +35,14 @@ export const DashboardData: Dashboard = {
         "https://raw.githubusercontent.com/HiDeoo/starlight-videos/refs/heads/main/packages/starlight-videos/translations.ts",
     },
     {
+      name: "Starlight Tags",
+      packageName: "starlight-tags",
+      translationFileLink:
+        "https://github.com/frostybee/starlight-tags/blob/main/packages/starlight-tags/src/translations.ts",
+      translationFileLinkRaw:
+        "https://raw.githubusercontent.com/frostybee/starlight-tags/refs/heads/main/packages/starlight-tags/src/translations.ts",
+    },
+    {
       name: "Starlight View Modes",
       packageName: "starlight-view-modes",
       translationFileLink:
