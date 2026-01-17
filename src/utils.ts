@@ -43,7 +43,7 @@ async function fetchTranslationFile(url: string): Promise<TranslationMap> {
   const text = await fetchTranslationFileRaw(url);
 
   // Extract the JSON-ish Translations object code
-  const match = text.match(/export const Translations\s*=\s*(\{[\s\S]*\});?/);
+  const match = text.match(/export const Translations\s*=\s*(\{[\s\S]*\});?/i);
   if (!match) throw new Error("Could not find Translations object in the file");
 
   const translationObject = new Function(
