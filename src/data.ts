@@ -50,6 +50,14 @@ export const DashboardData: Dashboard = {
       translationFileLinkRaw:
         "https://raw.githubusercontent.com/trueberryless-org/starlight-view-modes/refs/heads/main/packages/starlight-view-modes/translations.ts",
     },
+    {
+      name: "Starlight Announcement",
+      packageName: "starlight-announcement",
+      translationFileLink:
+        "https://github.com/frostybee/starlight-announcement/blob/main/packages/starlight-announcement/src/translations.ts",
+      translationFileLinkRaw:
+        "https://raw.githubusercontent.com/frostybee/starlight-announcement/refs/heads/main/packages/starlight-announcement/src/translations.ts",
+    },
   ],
   locales: [
     { label: "العربية", lang: "ar" },
