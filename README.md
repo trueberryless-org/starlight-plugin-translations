@@ -9,4 +9,4 @@ A website that tracks the translation progress of Starlight plugins which use [c
 
 Licensed under the MIT license, Copyright © trueberryless.
 
-See [LICENSE](/LICENSE) for more information.
+See [LICENSE](https://github.com/trueberryless-org/starlight-plugin-translations/blob/main/LICENSE) for more information.
