@@ -1,6 +1,16 @@
 {
   "name": "starlight-plugin-translations",
   "version": "0.1.0",
+  "homepage": "https://starlight-plugin-translations.trueberryless.org",
+  "bugs": {
+    "url": "https://github.com/trueberryless-org/starlight-plugin-translations/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trueberryless-org/starlight-plugin-translations.git"
+  },
+  "license": "MIT",
+  "author": "trueberryless <trueberryless@gmail.com> (https://trueberryless.org)",
   "type": "module",
   "scripts": {
     "astro": "astro",
@@ -13,7 +23,7 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "6.0.2",
-    "prettier": "3.8.0",
+    "prettier": "3.8.1",
     "prettier-plugin-astro": "0.14.1"
   },
   "packageManager": "pnpm@10.10.0"
