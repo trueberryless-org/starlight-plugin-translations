@@ -1,7 +1,7 @@
 {
   "name": "starlight-plugin-translations",
   "version": "0.1.0",
-  "homepage": "https://starlight-plugin-translations.trueberryless.org",
+  "homepage": "https://starlight-plugin-translations.netlify.app/",
   "bugs": {
     "url": "https://github.com/trueberryless-org/starlight-plugin-translations/issues"
   },
@@ -10,7 +10,7 @@
     "url": "https://github.com/trueberryless-org/starlight-plugin-translations.git"
   },
   "license": "MIT",
-  "author": "trueberryless <trueberryless@gmail.com> (https://trueberryless.org)",
+  "author": "trueberryless <trueberryless@gmail.com> (https://felixs.dev)",
   "type": "module",
   "scripts": {
     "astro": "astro",
