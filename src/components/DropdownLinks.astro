@@ -36,7 +36,9 @@ const localeLinks = filteredLocales.map((locale) => ({
 <nav class="top-dropdown-menu" role="navigation" aria-label="Main menu">
   <ul class="menu-list">
     <li class="menu-button" style="text-decoration: none;">
-      <a href="/" style="color: inherit;">Home</a>
+      <a href="/" style="color: inherit;">
+        Home
+      </a>
     </li>
     <li class="menu-item" data-menu="plugin">
       <button
@@ -48,13 +50,11 @@ const localeLinks = filteredLocales.map((locale) => ({
         View by plugin ▾
       </button>
       <ul class="submenu" hidden>
-        {
-          pluginLinks.map((plugin) => (
-            <li>
-              <a href={plugin.link}>{plugin.name}</a>
-            </li>
-          ))
-        }
+        {pluginLinks.map((plugin) => (
+          <li>
+            <a href={plugin.link}>{plugin.name}</a>
+          </li>
+        ))}
       </ul>
     </li>
     <li class="menu-item" data-menu="language">
@@ -67,13 +67,11 @@ const localeLinks = filteredLocales.map((locale) => ({
         View by language ▾
       </button>
       <ul class="submenu" hidden>
-        {
-          localeLinks.map((locale) => (
-            <li>
-              <a href={locale.link}>{locale.label}</a>
-            </li>
-          ))
-        }
+        {localeLinks.map((locale) => (
+          <li>
+            <a href={locale.link}>{locale.label}</a>
+          </li>
+        ))}
       </ul>
     </li>
   </ul>
