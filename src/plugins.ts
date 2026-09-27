@@ -26,6 +26,12 @@ export const PLUGINS: PluginConfig[] = [
     translationsPath: "packages/starlight-cooler-credit/translations.ts",
   },
   {
+    name: "Starlight Group Pages",
+    packageName: "starlight-group-pages",
+    repository: "trueberryless-org/starlight-group-pages",
+    translationsPath: "packages/starlight-group-pages/translations.ts",
+  },
+  {
     name: "Starlight Kbd",
     packageName: "starlight-kbd",
     repository: "HiDeoo/starlight-kbd",
