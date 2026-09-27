@@ -16,8 +16,12 @@ const getBlocks = (count: number, type: "done" | "missing") => {
 ---
 
 <div class="progress-bar" aria-hidden="true">
-  {getBlocks(doneSize, "done").map((_, i) => <div class="done-bar" />)}
-  {getBlocks(missingSize, "missing").map((_, i) => <div class="missing-bar" />)}
+  {getBlocks(doneSize, "done").map((_, i) => (
+    <div class="done-bar" />
+  ))}
+  {getBlocks(missingSize, "missing").map((_, i) => (
+    <div class="missing-bar" />
+  ))}
 </div>
 
 <style>

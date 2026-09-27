@@ -21,38 +21,36 @@ const progress: Progress = {
 
 <details class="progress-details">
   <summary>
-    <strong>{locale.label} ({locale.lang})</strong>
+    <strong>
+      {locale.label} ({locale.lang})
+    </strong>
     <br />
-    <span class="progress-summary"
-      >{doneCount} done, {missingCount} missing</span
-    >
+    <span class="progress-summary">
+      {doneCount} done, {missingCount} missing
+    </span>
     <br />
     <ProgressBar {progress} />
   </summary>
-  {
-    progress.missing > 0 && (
-      <>
-        <h3>Missing</h3>
-        <ul>
-          {keys
-            .filter((key) => key.status == "missing")
-            .map((missingKey) => (
-              <li>
-                <Link
-                  text={missingKey.name}
-                  href={`${missingKey.link}#L${missingKey.lineNumber}`}
-                />
-              </li>
-            ))}
-        </ul>
-      </>
-    )
-  }
-  {
-    progress.missing == 0 && (
-      <p>This translation is complete, amazing job! 🎉</p>
-    )
-  }
+  {progress.missing > 0 && (
+    <>
+      <h3>Missing</h3>
+      <ul>
+        {keys
+          .filter((key) => key.status == "missing")
+          .map((missingKey) => (
+            <li>
+              <Link
+                text={missingKey.name}
+                href={`${missingKey.link}#L${missingKey.lineNumber}`}
+              />
+            </li>
+          ))}
+      </ul>
+    </>
+  )}
+  {progress.missing == 0 && (
+    <p>This translation is complete, amazing job! 🎉</p>
+  )}
 </details>
 
 <style>
