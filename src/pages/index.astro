@@ -26,20 +26,6 @@ const languages = getTrackedLanguages(plugins);
     </p>
   </header>
 
-  <aside class="note" aria-labelledby="note-title">
-    <h2 id="note-title">Tracking, not a to-do list</h2>
-    <p>
-      This site is not a call to translate every plugin into every language.
-      Each language is something plugin maintainers have to keep up to date, so
-      a plugin is only tracked in the languages it already ships. What shows up
-      as missing are keys added after a translation was contributed.
-    </p>
-    <p>
-      Want to help? Check the missing keys of your language and open a pull
-      request on the plugin's repository.
-    </p>
-  </aside>
-
   <Section id="plugins" title="Plugins">
     <ul>
       {plugins.map((plugin) => (
@@ -91,27 +77,5 @@ const languages = getTrackedLanguages(plugins);
     color: var(--color-text-muted);
     font-size: 1.1875rem;
     margin-block-start: 1rem;
-  }
-
-  .note {
-    background: var(--color-accent-soft);
-    border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
-    border-radius: var(--radius);
-    margin-block-start: 2.5rem;
-    max-width: 48rem;
-    padding: 1.25rem 1.5rem;
-  }
-
-  .note h2 {
-    font-size: 1rem;
-    margin-block-end: 0.5rem;
-  }
-
-  .note p {
-    font-size: 0.9375rem;
-  }
-
-  .note p + p {
-    margin-block-start: 0.5rem;
   }
 </style>

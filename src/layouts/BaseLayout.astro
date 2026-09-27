@@ -72,15 +72,13 @@ const buildDate = new Date();
     <footer class="site-footer">
       <div class="container">
         <p>
-          Data is fetched from each plugin's repository and refreshed daily.
-          Last updated
+          Refreshed daily from each plugin's repository · Last updated
           <time datetime={buildDate.toISOString()} data-local-date>
             {buildDate.toUTCString()}
           </time>
-          .
         </p>
         <p>
-          Made by <a href="https://felixs.dev">trueberryless</a> ·
+          Made by <a href="https://felixs.dev">Felix</a> ·
           <a href={REPOSITORY_URL}>Source code</a> · MIT license
         </p>
       </div>
@@ -143,7 +141,7 @@ const buildDate = new Date();
     display: flex;
     gap: 1rem;
     justify-content: space-between;
-    min-height: 3.5rem;
+    min-height: var(--header-height);
   }
 
   .site-title {

@@ -1,4 +1,5 @@
 ---
+import { splitKeyAtDots } from "../libs/format";
 import type { TrackedPlugin } from "../libs/tracker";
 
 interface Props {
@@ -8,12 +9,7 @@ interface Props {
 const { plugin } = Astro.props;
 ---
 
-<div
-  class="table-wrapper"
-  tabindex="0"
-  role="region"
-  aria-label="Translation status by key"
->
+<div class="table-wrapper">
   <table>
     <thead>
       <tr>
@@ -30,7 +26,9 @@ const { plugin } = Astro.props;
         <tr>
           <th scope="row">
             <a href={key.url}>
-              <code>{key.name}</code>
+              <code>
+                {splitKeyAtDots(key.name).map((segment) => [segment, <wbr />])}
+              </code>
             </a>
           </th>
           {plugin.locales.map((locale) =>
@@ -57,8 +55,8 @@ const { plugin } = Astro.props;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
-    max-height: 80vh;
-    overflow: auto;
+    /* Clipping instead of scrolling keeps the page as the only scroll container so the header can stick to it. */
+    overflow: clip;
   }
 
   table {
@@ -72,7 +70,6 @@ const { plugin } = Astro.props;
   td {
     border-block-end: 1px solid var(--color-border);
     padding: 0.5rem 0.75rem;
-    white-space: nowrap;
   }
 
   tbody tr:last-child > * {
@@ -85,24 +82,19 @@ const { plugin } = Astro.props;
     font-weight: 600;
     position: sticky;
     text-align: center;
-    top: 0;
+    top: var(--header-height);
     z-index: 1;
   }
 
   thead th:first-child,
   tbody th {
-    inset-inline-start: 0;
-    position: sticky;
     text-align: start;
   }
 
-  thead th:first-child {
-    z-index: 2;
-  }
-
   tbody th {
-    background: var(--color-surface);
     font-weight: 400;
+    /* Long keys wrap after dots so the table always fits the page without a scrollbar of its own. */
+    overflow-wrap: break-word;
   }
 
   tbody th a {
