@@ -1,30 +1,40 @@
 {
   "name": "starlight-plugin-translations",
   "version": "0.1.0",
+  "private": true,
+  "description": "Tracks the current state of UI translations in Starlight plugins.",
   "homepage": "https://starlight-plugin-translations.netlify.app/",
   "bugs": {
     "url": "https://github.com/trueberryless-org/starlight-plugin-translations/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/trueberryless-org/starlight-plugin-translations.git"
+    "url": "git+https://github.com/trueberryless-org/starlight-plugin-translations.git"
   },
   "license": "MIT",
   "author": "trueberryless <trueberryless@gmail.com> (https://felixs.dev)",
   "type": "module",
   "scripts": {
     "astro": "astro",
-    "build": "astro build",
+    "build": "astro check && astro build",
+    "check": "astro check",
     "dev": "astro dev",
+    "format": "prettier . --write",
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "^7.3.2"
+    "astro": "^7.3.5",
+    "oxc-parser": "^0.151.0"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@trivago/prettier-plugin-sort-imports": "6.0.2",
-    "prettier": "3.9.6",
-    "prettier-plugin-astro": "1.0.0"
+    "prettier": "3.9.9",
+    "prettier-plugin-astro": "1.1.0",
+    "typescript": "^6.0.3"
   },
-  "packageManager": "pnpm@11.1.2"
+  "packageManager": "pnpm@11.27.1",
+  "engines": {
+    "node": ">=22.12.0"
+  }
 }

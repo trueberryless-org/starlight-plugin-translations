@@ -1,0 +1,151 @@
+---
+import { type LocaleKey, getProgress } from "../libs/tracker";
+
+import ProgressBar from "./ProgressBar.astro";
+
+interface Props {
+  keys: LocaleKey[];
+  subtitle?: string | undefined;
+  title: string;
+}
+
+const { keys, subtitle, title } = Astro.props;
+
+const progress = getProgress(keys);
+const missingKeys = keys.filter((key) => !key.isTranslated);
+---
+
+<li class="locale-status">
+  <details>
+    <summary>
+      <span class="locale-status-heading">
+        <span class="locale-status-title">{title}</span>
+        {subtitle && <span class="locale-status-subtitle">{subtitle}</span>}
+        <span
+          class:list={[
+            "locale-status-badge",
+            { complete: progress.missing === 0 },
+          ]}
+        >
+          {progress.missing === 0
+            ? "Complete"
+            : `${progress.missing} of ${progress.total} missing`}
+        </span>
+      </span>
+      <ProgressBar {progress} />
+    </summary>
+    <div class="locale-status-content">
+      {missingKeys.length > 0 ? (
+        <>
+          <p>Missing keys, linking to their English source:</p>
+          <ul>
+            {missingKeys.map((key) => (
+              <li>
+                <a href={key.url}>
+                  <code>{key.name}</code>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p>All {progress.total} keys are translated. 🎉</p>
+      )}
+    </div>
+  </details>
+</li>
+
+<style>
+  .locale-status {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  summary {
+    cursor: pointer;
+    display: grid;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 1rem 1.25rem;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary:hover .locale-status-title {
+    color: var(--color-accent);
+  }
+
+  .locale-status-heading {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+  }
+
+  .locale-status-heading::before {
+    color: var(--color-text-muted);
+    content: "▸";
+    display: inline-block;
+    transition: transform 0.15s ease;
+  }
+
+  details[open] .locale-status-heading::before {
+    transform: rotate(90deg);
+  }
+
+  .locale-status-title {
+    color: var(--color-text-bright);
+    font-weight: 600;
+  }
+
+  .locale-status-subtitle {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+  }
+
+  .locale-status-badge {
+    background: color-mix(in srgb, var(--color-missing) 14%, transparent);
+    border-radius: 999px;
+    color: var(--color-missing);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-inline-start: auto;
+    padding: 0.125rem 0.625rem;
+  }
+
+  .locale-status-badge.complete {
+    background: color-mix(in srgb, var(--color-done) 14%, transparent);
+    color: var(--color-done);
+  }
+
+  .locale-status-content {
+    border-block-start: 1px solid var(--color-border);
+    font-size: 0.875rem;
+    padding: 1rem 1.25rem 1.25rem;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin-block-start: 0.75rem;
+    padding: 0;
+  }
+
+  ul a {
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    text-decoration: none;
+  }
+
+  ul a:hover {
+    border-color: var(--color-accent);
+  }
+</style>

@@ -1,52 +1,64 @@
 ---
-import LunariaLayout from "../../layouts/LunariaLayout.astro";
-import {
-  getLocaleByLang,
-  pluginToLanguageTransformer,
-  processPlugins,
-  type DataPerPlugin,
-} from "../../utils";
+import type { GetStaticPaths } from "astro";
 
-export async function getStaticPaths() {
-  const pluginsData = await processPlugins();
-  const languageData = await pluginToLanguageTransformer(pluginsData);
-  return languageData.map((language) => ({
+import { formatCount } from "../../libs/format";
+import {
+  type TrackedLanguage,
+  getLanguageProgress,
+  getTrackedLanguages,
+  getTrackedPlugins,
+} from "../../libs/tracker";
+
+import LocaleStatus from "../../components/LocaleStatus.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import Section from "../../components/Section.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export const getStaticPaths = (async () => {
+  const languages = getTrackedLanguages(await getTrackedPlugins());
+
+  return languages.map((language) => ({
     params: { language: language.lang },
-    props: { pluginsData },
+    props: { language },
   }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  language: TrackedLanguage;
 }
 
-const { language } = Astro.params;
-const { pluginsData } = Astro.props;
-const filteredPluginsData: DataPerPlugin[] = pluginsData
-  .map((plugin) => {
-    const filteredKeys = plugin.keys
-      .filter((key) => key.locales[language])
-      .map((key) => ({
-        key: key.key,
-        locales: {
-          [language]: key.locales[language]!,
-        },
-      }));
-
-    if (filteredKeys.length === 0) return null;
-
-    return {
-      ...plugin,
-      keys: filteredKeys,
-    };
-  })
-  .filter((plugin): plugin is DataPerPlugin => plugin !== null);
-
-const title =
-  "Starlight Plugin " +
-  getLocaleByLang(language).label +
-  " Translations Tracker";
+const { language } = Astro.props;
 ---
 
-<LunariaLayout {title} pluginsData={filteredPluginsData}>
-  <p slot="description">
-    You are viewing the translation tracker for the for the language:{" "}
-    {getLocaleByLang(language).label}.
-  </p>
-</LunariaLayout>
+<BaseLayout
+  title={language.englishName}
+  description={`The current state of the ${language.englishName} UI translations of Starlight plugins.`}
+>
+  <PageHeader
+    eyebrow="Language"
+    lang={language.lang}
+    progress={getLanguageProgress(language)}
+    subtitle={
+      language.englishName === language.nativeName
+        ? language.lang
+        : `${language.englishName} · ${language.lang}`
+    }
+    title={language.nativeName}
+  />
+
+  <Section id="by-plugin" title="By plugin">
+    <p slot="description">
+      {formatCount(language.plugins.length, "plugin is", "plugins are")}{" "}
+      translated to {language.englishName}.
+    </p>
+    <ul class="stack">
+      {language.plugins.map(({ locale, plugin }) => (
+        <LocaleStatus
+          keys={locale.keys}
+          subtitle={plugin.config.packageName}
+          title={plugin.config.name}
+        />
+      ))}
+    </ul>
+  </Section>
+</BaseLayout>

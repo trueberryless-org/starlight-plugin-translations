@@ -1,0 +1,181 @@
+---
+import "../styles/globals.css";
+
+interface Props {
+  description?: string;
+  title?: string;
+}
+
+const SITE_TITLE = "Starlight Plugin Translations";
+const REPOSITORY_URL =
+  "https://github.com/trueberryless-org/starlight-plugin-translations";
+
+const {
+  description = "Tracks the current state of UI translations in Starlight plugins.",
+  title,
+} = Astro.props;
+
+const pageTitle = title ? `${title} | ${SITE_TITLE}` : SITE_TITLE;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = new URL("/og.png", Astro.site);
+const buildDate = new Date();
+---
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_TITLE} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta
+      property="og:image:alt"
+      content="Translation status of Starlight plugins."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script
+      is:inline
+      src="https://rybbit.lou.gg/api/script.js"
+      data-site-id="5"
+      defer
+    ></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    <header class="site-header">
+      <div class="container site-header-inner">
+        <a class="site-title" href="/">
+          <span aria-hidden="true">🈂️</span>
+          {SITE_TITLE}
+        </a>
+        <a class="site-github" href={REPOSITORY_URL}>
+          GitHub
+        </a>
+      </div>
+    </header>
+
+    <main id="main" class="container">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>
+          Refreshed daily from each plugin's repository · Last updated
+          <time datetime={buildDate.toISOString()} data-local-date>
+            {buildDate.toUTCString()}
+          </time>
+        </p>
+        <p>
+          Made by <a href="https://felixs.dev">Felix</a> ·
+          <a href={REPOSITORY_URL}>Source code</a> · MIT license
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<script>
+  // Localize the build date to the visitor's locale and time zone.
+  for (const time of document.querySelectorAll<HTMLTimeElement>(
+    "time[data-local-date]"
+  )) {
+    time.textContent = new Date(time.dateTime).toLocaleString(undefined, {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+  }
+</script>
+
+<style>
+  .container {
+    margin-inline: auto;
+    max-width: 72rem;
+    padding-inline: 1rem;
+    width: 100%;
+  }
+
+  @media (min-width: 48rem) {
+    .container {
+      padding-inline: 2rem;
+    }
+  }
+
+  .skip-link {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    inset-block-start: 0.5rem;
+    inset-inline-start: 0.5rem;
+    padding: 0.5rem 1rem;
+    position: absolute;
+    transform: translateY(-200%);
+    z-index: 10;
+  }
+
+  .skip-link:focus {
+    transform: none;
+  }
+
+  .site-header {
+    backdrop-filter: blur(12px);
+    background: color-mix(in srgb, var(--color-bg) 75%, transparent);
+    border-block-end: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  .site-header-inner {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    min-height: var(--header-height);
+  }
+
+  .site-title {
+    align-items: center;
+    color: var(--color-text-bright);
+    display: flex;
+    font-weight: 700;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
+
+  .site-github {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  main {
+    flex: 1;
+    padding-block: 3rem 5rem;
+  }
+
+  .site-footer {
+    border-block-start: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    padding-block: 2rem;
+  }
+
+  .site-footer p + p {
+    margin-block-start: 0.25rem;
+  }
+
+  .site-footer a {
+    color: inherit;
+  }
+</style>
