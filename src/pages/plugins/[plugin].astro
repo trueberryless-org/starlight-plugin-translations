@@ -1,22 +1,71 @@
 ---
-import LunariaLayout from "../../layouts/LunariaLayout.astro";
-import { processPlugins } from "../../utils";
+import type { GetStaticPaths } from "astro";
 
-export async function getStaticPaths() {
-  const pluginsData = await processPlugins();
-  return pluginsData.map((plugin) => ({
-    params: { plugin: plugin.packageName },
-    props: { pluginsData: plugin },
+import { formatCount } from "../../libs/format";
+import { getRepositoryUrl } from "../../libs/github";
+import {
+  type TrackedPlugin,
+  getPluginProgress,
+  getTrackedPlugins,
+} from "../../libs/tracker";
+
+import LocaleStatus from "../../components/LocaleStatus.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import Section from "../../components/Section.astro";
+import StatusTable from "../../components/StatusTable.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export const getStaticPaths = (async () => {
+  const plugins = await getTrackedPlugins();
+
+  return plugins.map((plugin) => ({
+    params: { plugin: plugin.config.packageName },
+    props: { plugin },
   }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  plugin: TrackedPlugin;
 }
 
-const { pluginsData } = Astro.props;
-const title = pluginsData.name + " Translations Tracker";
+const { plugin } = Astro.props;
+const { name, packageName } = plugin.config;
 ---
 
-<LunariaLayout {title} pluginsData={[pluginsData]}>
-  <p slot="description">
-    You are viewing the translation tracker for the{" "}
-    <a href={pluginsData.translationFileLink}>{pluginsData.name}</a> plugin.
-  </p>
-</LunariaLayout>
+<BaseLayout
+  title={name}
+  description={`The current state of the UI translations of the ${name} Starlight plugin.`}
+>
+  <PageHeader
+    eyebrow="Plugin"
+    progress={getPluginProgress(plugin)}
+    title={name}
+  >
+    <a href={getRepositoryUrl(plugin.config)}>Repository</a>
+    <a href={plugin.url}>Translations file</a>
+    <a href={`https://www.npmjs.com/package/${packageName}`}>npm</a>
+  </PageHeader>
+
+  <Section id="by-language" title="By language">
+    <p slot="description">
+      {formatCount(plugin.keys.length, "key", "keys")} translated in
+      {formatCount(plugin.locales.length, "language", "languages")} besides
+      English.
+    </p>
+    <ul class="stack">
+      {plugin.locales.map((locale) => (
+        <LocaleStatus
+          keys={locale.keys}
+          subtitle={locale.lang}
+          title={locale.names.nativeName}
+        />
+      ))}
+    </ul>
+  </Section>
+
+  {plugin.locales.length > 0 && (
+    <Section id="by-key" title="By key">
+      <StatusTable {plugin} />
+    </Section>
+  )}
+</BaseLayout>

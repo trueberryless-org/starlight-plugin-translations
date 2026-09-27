@@ -1,55 +1,61 @@
 ---
-import type { Progress } from "../schemas";
+import type { Progress } from "../libs/tracker";
 
 interface Props {
   progress: Progress;
 }
 
-const { total, missing, size = 20 } = Astro.props.progress;
+const { progress } = Astro.props;
 
-const missingSize = Math.round((missing / total) * size);
-const doneSize = size - missingSize;
-
-const getBlocks = (count: number, type: "done" | "missing") => {
-  return Array.from({ length: count }, () => type);
-};
+const percentage =
+  progress.total === 0
+    ? 100
+    : Math.floor((progress.done / progress.total) * 100);
 ---
 
-<div class="progress-bar" aria-hidden="true">
-  {getBlocks(doneSize, "done").map((_, i) => (
-    <div class="done-bar" />
-  ))}
-  {getBlocks(missingSize, "missing").map((_, i) => (
-    <div class="missing-bar" />
-  ))}
+<div class="progress">
+  <div class="progress-track" aria-hidden="true">
+    <div
+      class:list={["progress-fill", { complete: progress.missing === 0 }]}
+      style={{ width: `${percentage}%` }}
+    ></div>
+  </div>
+  <span class="progress-label">
+    {percentage}%<span class="sr-only"> translated</span>
+  </span>
 </div>
 
 <style>
-  .progress-bar {
+  .progress {
+    align-items: center;
     display: flex;
-    flex-direction: row;
-    margin-top: 0.5rem;
+    gap: 0.75rem;
   }
 
-  .progress-bar div:first-of-type {
-    border-radius: 36px 0px 0px 36px;
+  .progress-track {
+    background: var(--color-track);
+    border-radius: 999px;
+    flex: 1;
+    height: 0.5rem;
+    overflow: hidden;
   }
 
-  .progress-bar div:last-of-type {
-    border-radius: 0px 36px 36px 0px;
+  .progress-fill {
+    background: var(--color-accent);
+    border-radius: inherit;
+    height: 100%;
   }
 
-  .done-bar,
-  .missing-bar {
-    width: 1rem;
-    height: 1rem;
+  .progress-fill.complete {
+    background: var(--color-done);
   }
 
-  .done-bar {
-    background-color: var(--ln-color-done);
-  }
-
-  .missing-bar {
-    background-color: var(--ln-color-missing);
+  .progress-label {
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    min-width: 2.75rem;
+    text-align: end;
   }
 </style>

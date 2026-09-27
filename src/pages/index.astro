@@ -1,52 +1,117 @@
 ---
-import LunariaLayout from "../layouts/LunariaLayout.astro";
-import { processPlugins } from "../utils";
+import { formatCount } from "../libs/format";
+import {
+  getLanguageProgress,
+  getPluginProgress,
+  getTrackedLanguages,
+  getTrackedPlugins,
+} from "../libs/tracker";
 
-const pluginsData = await processPlugins();
-const buildTimeISO = new Date().toISOString(); // Build timestamp
+import OverviewCard from "../components/OverviewCard.astro";
+import Section from "../components/Section.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const plugins = await getTrackedPlugins();
+const languages = getTrackedLanguages(plugins);
 ---
 
-<LunariaLayout title="Starlight Plugin Translations Tracker" {pluginsData}>
-  <p slot="description">
-    This page tracks the current progress of translations for various plugins in
-    the Starlight ecosystem. If you're using one of these plugins and would like
-    to contribute translations for your language, feel free to check their
-    repository for more details on how to contribute translations or reach out
-    to the plugin author.
-  </p>
-  <p slot="description">
-    This website is automatically updated every day at
-    <span id="local-schedule-time" data-time="00:00">
-      0:00 AM UTC
-    </span>
-    . The current version was last built on
-    <span id="build-time" data-iso={buildTimeISO}>
-      loading…
-    </span>
-    . Please check the plugin repository for the most up-to-date information.
-  </p>
-</LunariaLayout>
+<BaseLayout>
+  <header class="hero">
+    <p class="hero-eyebrow">Starlight ecosystem</p>
+    <h1>Starlight Plugin Translations</h1>
+    <p class="hero-lead">
+      The current state of UI translations in
+      {formatCount(plugins.length, "Starlight plugin", "Starlight plugins")}
+      across {formatCount(languages.length, "language", "languages")}.
+    </p>
+  </header>
 
-<script>
-  // Format the last build time for the user's locale
-  const buildTimeEl = document.getElementById("build-time");
-  const buildTime = new Date(buildTimeEl.dataset.iso);
-  buildTimeEl.textContent = buildTime.toLocaleString(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
+  <aside class="note" aria-labelledby="note-title">
+    <h2 id="note-title">Tracking, not a to-do list</h2>
+    <p>
+      This site is not a call to translate every plugin into every language.
+      Each language is something plugin maintainers have to keep up to date, so
+      a plugin is only tracked in the languages it already ships. What shows up
+      as missing are keys added after a translation was contributed.
+    </p>
+    <p>
+      Want to help? Check the missing keys of your language and open a pull
+      request on the plugin's repository.
+    </p>
+  </aside>
 
-  // Convert 02:00 UTC to local time
-  const scheduleEl = document.getElementById("local-schedule-time");
-  const utcTime = scheduleEl.dataset.time;
-  const [h, m] = utcTime.split(":").map(Number);
-  const now = new Date();
-  const localScheduled = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), h, m)
-  );
-  scheduleEl.textContent = localScheduled.toLocaleTimeString(undefined, {
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZoneName: "short",
-  });
-</script>
+  <Section id="plugins" title="Plugins">
+    <ul>
+      {plugins.map((plugin) => (
+        <OverviewCard
+          description={`${formatCount(plugin.keys.length, "key", "keys")} · ${formatCount(plugin.locales.length, "language", "languages")}`}
+          href={`/plugins/${plugin.config.packageName}/`}
+          progress={getPluginProgress(plugin)}
+          subtitle={plugin.config.packageName}
+          title={plugin.config.name}
+        />
+      ))}
+    </ul>
+  </Section>
+
+  <Section id="languages" title="Languages">
+    <ul>
+      {languages.map((language) => (
+        <OverviewCard
+          description={`${language.lang} · ${formatCount(language.plugins.length, "plugin", "plugins")}`}
+          href={`/languages/${language.lang}/`}
+          progress={getLanguageProgress(language)}
+          subtitle={
+            language.englishName === language.nativeName
+              ? undefined
+              : language.englishName
+          }
+          title={language.nativeName}
+        />
+      ))}
+    </ul>
+  </Section>
+</BaseLayout>
+
+<style>
+  .hero {
+    max-width: 48rem;
+  }
+
+  .hero-eyebrow {
+    color: var(--color-accent);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-block-end: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  .hero-lead {
+    color: var(--color-text-muted);
+    font-size: 1.1875rem;
+    margin-block-start: 1rem;
+  }
+
+  .note {
+    background: var(--color-accent-soft);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+    border-radius: var(--radius);
+    margin-block-start: 2.5rem;
+    max-width: 48rem;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .note h2 {
+    font-size: 1rem;
+    margin-block-end: 0.5rem;
+  }
+
+  .note p {
+    font-size: 0.9375rem;
+  }
+
+  .note p + p {
+    margin-block-start: 0.5rem;
+  }
+</style>

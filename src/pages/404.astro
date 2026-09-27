@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Page not found">
+  <h1>Page not found</h1>
+  <p>
+    This page does not exist. Maybe the plugin or language is no longer tracked.
+  </p>
+  <p>
+    <a href="/">Back to the overview</a>
+  </p>
+</BaseLayout>
+
+<style>
+  p {
+    color: var(--color-text-muted);
+    margin-block-start: 1rem;
+  }
+</style>

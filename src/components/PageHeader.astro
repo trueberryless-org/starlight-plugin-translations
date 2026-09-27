@@ -1,0 +1,75 @@
+---
+import type { Progress } from "../libs/tracker";
+
+import ProgressBar from "./ProgressBar.astro";
+
+interface Props {
+  eyebrow: string;
+  lang?: string | undefined;
+  progress: Progress;
+  subtitle?: string | undefined;
+  title: string;
+}
+
+const { eyebrow, lang, progress, subtitle, title } = Astro.props;
+---
+
+<header class="page-header">
+  <nav aria-label="Breadcrumb">
+    <a href="/">Overview</a>
+    <span aria-hidden="true">/</span>
+    <span>{eyebrow}</span>
+  </nav>
+  <h1 {lang}>{title}</h1>
+  {subtitle && <p class="page-header-subtitle">{subtitle}</p>}
+  {Astro.slots.has("default") && (
+    <p class="page-header-links">
+      <slot />
+    </p>
+  )}
+  <div class="page-header-progress">
+    <ProgressBar {progress} />
+    <p>
+      {progress.done} of {progress.total} translations done
+    </p>
+  </div>
+</header>
+
+<style>
+  .page-header {
+    max-width: 48rem;
+  }
+
+  nav {
+    color: var(--color-text-muted);
+    display: flex;
+    font-size: 0.875rem;
+    gap: 0.5rem;
+    margin-block-end: 1rem;
+  }
+
+  .page-header-subtitle {
+    color: var(--color-text-muted);
+    font-size: 1.125rem;
+    margin-block-start: 0.5rem;
+  }
+
+  .page-header-links {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.9375rem;
+    gap: 0.5rem 1.25rem;
+    margin-block-start: 1rem;
+  }
+
+  .page-header-progress {
+    margin-block-start: 2rem;
+    max-width: 28rem;
+  }
+
+  .page-header-progress p {
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+    margin-block-start: 0.25rem;
+  }
+</style>

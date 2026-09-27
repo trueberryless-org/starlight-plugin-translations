@@ -1,86 +1,144 @@
-* {
+:root {
+  color-scheme: light dark;
+
+  --font-body:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono:
+    ui-monospace, "SF Mono", "Cascadia Code", "IBM Plex Mono", Menlo, Consolas,
+    monospace;
+
+  --color-bg: hsl(240, 33%, 98%);
+  --color-surface: hsl(0, 0%, 100%);
+  --color-surface-raised: hsl(240, 30%, 96%);
+  --color-border: hsl(240, 18%, 88%);
+  --color-text: hsl(235, 18%, 26%);
+  --color-text-muted: hsl(235, 10%, 44%);
+  --color-text-bright: hsl(235, 30%, 10%);
+  --color-accent: hsl(250, 70%, 52%);
+  --color-accent-soft: hsla(250, 70%, 52%, 0.1);
+  --color-done: hsl(152, 60%, 36%);
+  --color-missing: hsl(356, 72%, 52%);
+  --color-track: hsl(240, 18%, 90%);
+  --color-glow: hsla(255, 80%, 65%, 0.12);
+
+  --radius: 0.75rem;
+  --shadow:
+    0 1px 2px hsla(235, 30%, 20%, 0.06), 0 4px 16px hsla(235, 30%, 20%, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: hsl(223, 13%, 9%);
+    --color-surface: hsl(222, 14%, 13%);
+    --color-surface-raised: hsl(222, 13%, 17%);
+    --color-border: hsl(222, 12%, 23%);
+    --color-text: hsl(228, 12%, 78%);
+    --color-text-muted: hsl(228, 8%, 60%);
+    --color-text-bright: hsl(0, 0%, 100%);
+    --color-accent: hsl(234, 100%, 80%);
+    --color-accent-soft: hsla(234, 100%, 80%, 0.12);
+    --color-done: hsl(152, 55%, 55%);
+    --color-missing: hsl(356, 85%, 68%);
+    --color-track: hsl(222, 12%, 24%);
+    --color-glow: hsla(255, 60%, 60%, 0.2);
+    --shadow: 0 1px 2px hsla(0, 0%, 0%, 0.3), 0 8px 24px hsla(0, 0%, 0%, 0.2);
+  }
+}
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+* {
   margin: 0;
 }
 
 html {
-  background: var(--ln-color-background);
+  background:
+    radial-gradient(var(--color-glow), transparent 60%) no-repeat -30vw -40vh /
+      90vw 110vh,
+    radial-gradient(var(--color-glow), transparent 60%) no-repeat 110% 0 / 60vw
+      70vh,
+    var(--color-bg);
   scrollbar-gutter: stable;
 }
 
 body {
-  color: var(--ln-color-black);
+  color: var(--color-text);
   display: flex;
   flex-direction: column;
-  font-family: var(--ln-font-body);
-  font-size: 16px;
-  line-height: 1.5;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1,
 h2,
-h3,
-h4,
-h5,
-h6 {
-  color: var(--theme-text-bright);
-  margin-bottom: 1rem;
-  font-weight: bold;
-  line-height: 1.3;
-}
-
-h1,
-h2 {
-  max-width: 40ch;
+h3 {
+  color: var(--color-text-bright);
+  line-height: 1.25;
+  text-wrap: balance;
 }
 
 h1 {
-  margin-top: 5rem;
-  font-size: 2.25rem;
-  font-weight: 900;
+  font-size: clamp(2rem, 1.5rem + 2.5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 h2 {
-  font-size: 1.875rem;
-  margin-top: 4rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
-h3,
-h4 {
-  margin-top: 3rem;
-}
-
-h5,
-h6 {
-  margin-top: 2rem;
-}
-
-p + p {
-  margin-top: 1.25rem;
+h3 {
+  font-size: 1.0625rem;
+  font-weight: 600;
 }
 
 a {
-  color: var(--ln-color-link);
-  text-decoration: none;
-}
-
-p a {
-  text-decoration: underline;
-}
-
-h2 a {
-  color: inherit;
+  color: var(--color-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 2px;
 }
 
-sup {
-  display: flex;
-  justify-content: center;
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
 }
 
-ul {
-  font-size: 0.875rem;
+code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+.sr-only {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0s !important;
+  }
 }

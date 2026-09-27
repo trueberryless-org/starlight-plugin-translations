@@ -1,0 +1,128 @@
+---
+import type { TrackedPlugin } from "../libs/tracker";
+
+interface Props {
+  plugin: TrackedPlugin;
+}
+
+const { plugin } = Astro.props;
+---
+
+<div
+  class="table-wrapper"
+  tabindex="0"
+  role="region"
+  aria-label="Translation status by key"
+>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Key</th>
+        {plugin.locales.map((locale) => (
+          <th scope="col" title={locale.names.englishName}>
+            {locale.lang}
+          </th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {plugin.keys.map((key, index) => (
+        <tr>
+          <th scope="row">
+            <a href={key.url}>
+              <code>{key.name}</code>
+            </a>
+          </th>
+          {plugin.locales.map((locale) =>
+            locale.keys[index]?.isTranslated ? (
+              <td class="done">
+                <span aria-hidden="true">✓</span>
+                <span class="sr-only">Translated</span>
+              </td>
+            ) : (
+              <td class="missing">
+                <span aria-hidden="true">✕</span>
+                <span class="sr-only">Missing</span>
+              </td>
+            )
+          )}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .table-wrapper {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    max-height: 80vh;
+    overflow: auto;
+  }
+
+  table {
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.8125rem;
+    width: 100%;
+  }
+
+  th,
+  td {
+    border-block-end: 1px solid var(--color-border);
+    padding: 0.5rem 0.75rem;
+    white-space: nowrap;
+  }
+
+  tbody tr:last-child > * {
+    border-block-end: none;
+  }
+
+  thead th {
+    background: var(--color-surface-raised);
+    color: var(--color-text-bright);
+    font-weight: 600;
+    position: sticky;
+    text-align: center;
+    top: 0;
+    z-index: 1;
+  }
+
+  thead th:first-child,
+  tbody th {
+    inset-inline-start: 0;
+    position: sticky;
+    text-align: start;
+  }
+
+  thead th:first-child {
+    z-index: 2;
+  }
+
+  tbody th {
+    background: var(--color-surface);
+    font-weight: 400;
+  }
+
+  tbody th a {
+    text-decoration: none;
+  }
+
+  tbody tr:hover > * {
+    background: var(--color-surface-raised);
+  }
+
+  td {
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .done {
+    color: var(--color-done);
+  }
+
+  .missing {
+    color: var(--color-missing);
+  }
+</style>
